@@ -105,7 +105,7 @@ if __name__ =="__main__":
     #gen_or_gate()
 
     # Plotting chart
-    trace = go.Scatter(x=alpha, y=success_ratios)
+    trace = go.Scatter(x=alpha, y=success_ratios/nd)
     layout = go.Layout(
         title='<b>{}</b>'.format('Dependence of successful runs ratio on alpha'),
         titlefont=dict(family='Open Sans', size=20),
