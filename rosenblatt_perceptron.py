@@ -84,12 +84,11 @@ def gen_and_gate():
 
 
 if __name__ =="__main__":
-    p = 15
-    n = 20
+    n = 20 # number of dimensions
+    nd = 2  # number of datasets
     alpha=np.linspace(0.75,3,3)
-    p=alpha*n
-    nd = 2 # number of datasets
-    success_ratios = np.zeros(len(p))
+    p=alpha*n # number of vectors
+    success_total = np.zeros(len(p)) # total success for each p value
     for j in range(0,len(p)): # first loop over values of p
         for i in range(0,nd): # second loop over different datasets
             x, y = gen_dataset(int(p[j]), n)
@@ -97,15 +96,15 @@ if __name__ =="__main__":
             success=perceptron.train(x, y)
             print("Success:",success)
             if success == True:
-                success_ratios[j]+=1
+                success_total[j]+=1
         print("Value of p:",p[j],
-              "\nFraction of successful runs:",success_ratios[j]/nd)
+              "\nFraction of successful runs:",success_total[j]/nd)
 
     #gen_and_gate()
     #gen_or_gate()
 
     # Plotting chart
-    trace = go.Scatter(x=alpha, y=success_ratios/nd)
+    trace = go.Scatter(x=alpha, y=success_total/nd)
     layout = go.Layout(
         title='<b>{}</b>'.format('Dependence of successful runs ratio on alpha'),
         titlefont=dict(family='Open Sans', size=20),
