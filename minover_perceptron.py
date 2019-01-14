@@ -1,4 +1,3 @@
-import math
 import numpy as np
 import plotly as py
 import plotly.graph_objs as go
@@ -48,7 +47,7 @@ class Perceptron:
             # calculate the angle in radians between the old and the new weights
             # (if the product of the norms is non-zero)
             if norm_prod != 0:
-                angle = math.acos(np.dot(old_weights, self.weights) / norm_prod)
+                angle = np.arccos(np.dot(old_weights, self.weights) / norm_prod)
 
             # if the angle between the old and new weights is sufficiently small, stop training
             if angle < stop_criterion:
