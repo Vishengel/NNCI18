@@ -114,9 +114,9 @@ if __name__ == "__main__":
         for i in range(0, nd):  # second loop over different datasets
             x, y = gen_dataset(w_star, int(p[j]), n)
             perceptron = Perceptron(n, w_star)
-            generalization_error[j] += generalization_error[j] + (1/nd)*perceptron.train(x, y)[1]
-        print("Value of p:", p[j],
-              "\n Average generalization error: {}".format(generalization_error[j]))
+            generalization_error[j] = generalization_error[j] + (1/nd)*perceptron.train(x, y)[1]
+        # print("Value of p:", p[j],
+        #       "\n Average generalization error: {}".format(generalization_error[j]))
 
 
     # Plotting chart
