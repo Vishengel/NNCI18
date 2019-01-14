@@ -51,13 +51,19 @@ class Perceptron:
             print("Success in ", epoch, " epochs!")
 
         # TODO generalization_error =
+        generalization_error = np.dot(1/np.pi,
+                                      np.arccos(np.dot(np.dot(self.weights,self.w_star),
+                                                       (1/np.linalg.norm(self.weights)) *
+                                                       (1/np.linalg.norm(self.w_star)))))
+        print('Generalization error: {}'.format(generalization_error))
 
-        return success
+        return success, generalization_error
 
     # function that returns the output activation given an input pattern
     def present_input(self, input):
         return np.dot(input, self.weights)
-                
+
+
 # generate a dataset
 def gen_dataset(w_star, p=5, n=20):
     x = np.random.normal(0, 1, p*n)
@@ -70,6 +76,7 @@ def gen_dataset(w_star, p=5, n=20):
 
     return x,y
 
+
 def test_single_run():
     p = 5
     n = 20
@@ -80,21 +87,39 @@ def test_single_run():
     perceptron = Perceptron(n, w_star)
     perceptron.train(x, y)
 
-if __name__ =="__main__":
-    test_single_run()
 
-    # n = 20 # number of dimensions
-    # nd = 2  # number of datasets
-    # alpha=np.linspace(0.75,3,3)
-    # p=alpha*n # number of vectors
-    # success_total = np.zeros(len(p)) # total success for each p value
-    # for j in range(0,len(p)): # first loop over values of p
-    #     for i in range(0,nd): # second loop over different datasets
-    #         x, y = gen_dataset(int(p[j]), n)
-    #         perceptron = Perceptron(n)
-    #         success=perceptron.train(x, y)
-    #         print("Success:",success)
-    #         if success == True:
-    #             success_total[j]+=1
-    #     print("Value of p:",p[j],
-    #           "\nFraction of successful runs:",success_total[j]/nd)
+if __name__ == "__main__":
+
+    # test_single_run()
+
+    n = 20  # number of dimensions
+    w_star = n * [1]
+    nd = 2  # number of datasets
+    alpha = np.linspace(0.75, 3, 3)
+    p = alpha * n  # number of examples
+    generalization_error = np.zeros(len(p))  # generalization errors for each p value
+
+    for j in range(0, len(p)):  # first loop over values of p
+        for i in range(0, nd):  # second loop over different datasets
+            x, y = gen_dataset(w_star, int(p[j]), n)
+            perceptron = Perceptron(n, w_star)
+            generalization_error[j] += generalization_error[j] + (1/nd)*perceptron.train(x, y)[1]
+        print("Value of p:", p[j],
+              "\n Average generalization error: {}".format(generalization_error[j]))
+
+
+    # Plotting chart
+    trace = go.Scatter(x=alpha, y=generalization_error)
+    layout = go.Layout(
+        title='<b>{}</b>'.format('Dependence of successful runs ratio on alpha'),
+        titlefont=dict(family='Open Sans', size=20),
+        font=dict(family='Open Sans'),
+        xaxis=dict(title='<i>{}</i>'.format('alpha'), titlefont=dict(size=16), tickfont=dict(size=12)),
+        yaxis=dict(title='<i>{}</i>'.format('Success ratio'), titlefont=dict(size=16), tickfont=dict(size=12)),
+        legend=dict(font=dict(size=16), orientation='v'),
+    )
+
+    fig = go.Figure(data=[trace], layout=layout)
+    py.offline.plot(fig,
+                    filename='rosenblatt_perceptron_test.html',
+                    auto_open=False)
