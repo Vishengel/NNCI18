@@ -105,8 +105,8 @@ if __name__ == "__main__":
 
     n = 20  # number of dimensions
     w_star = n * [1]
-    nd = 2  # number of datasets
-    alpha = np.linspace(0.75, 3, 3)
+    nd = 10  # number of datasets
+    alpha = np.linspace(0.1, 5, 50)
     p = alpha * n  # number of examples
     generalization_error = np.zeros(len(p))  # generalization errors for each p value
 
@@ -122,11 +122,11 @@ if __name__ == "__main__":
     # Plotting chart
     trace = go.Scatter(x=alpha, y=generalization_error)
     layout = go.Layout(
-        title='<b>{}</b>'.format('Dependence of successful runs ratio on alpha'),
+        title='<b>{}</b>'.format(''),
         titlefont=dict(family='Open Sans', size=20),
         font=dict(family='Open Sans'),
         xaxis=dict(title='<i>{}</i>'.format('alpha'), titlefont=dict(size=16), tickfont=dict(size=12)),
-        yaxis=dict(title='<i>{}</i>'.format('Success ratio'), titlefont=dict(size=16), tickfont=dict(size=12)),
+        yaxis=dict(title='<i>{}</i>'.format('Average generalization error'), titlefont=dict(size=16), tickfont=dict(size=12)),
         legend=dict(font=dict(size=16), orientation='v'),
     )
 
