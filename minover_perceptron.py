@@ -17,6 +17,8 @@ class Perceptron:
         success = False
         stop_criterion = 0.001
         max_epochs = n_epochs * len(x)
+        # init angle as 1 to prevent algorithm from stopping after the first training step
+        angle = 1
 
         # continue until the max n epochs is reached or all error terms are above 0
         while epoch < max_epochs and not success:
@@ -42,8 +44,11 @@ class Perceptron:
             # update the weights by adding the term to the current weights
             self.weights = np.add(self.weights, weight_addition_term)
 
+            norm_prod = np.linalg.norm(old_weights) * np.linalg.norm(self.weights)
             # calculate the angle in radians between the old and the new weights
-            angle = math.acos(np.dot(old_weights, self.weights) / (np.linalg.norm(old_weights) * np.linalg.norm(self.weights)))
+            # (if the product of the norms is non-zero)
+            if norm_prod != 0:
+                angle = math.acos(np.dot(old_weights, self.weights) / norm_prod)
 
             # if the angle between the old and new weights is sufficiently small, stop training
             if angle < stop_criterion:
