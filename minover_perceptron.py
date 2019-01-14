@@ -1,3 +1,4 @@
+import math
 import numpy as np
 import plotly as py
 import plotly.graph_objs as go
@@ -14,12 +15,11 @@ class Perceptron:
     def train(self, x, y, n_epochs=1000):
         epoch = 0
         success = False
-        equal_found = False
+        stop_criterion = 0.001
         max_epochs = n_epochs * len(x)
 
         # continue until the max n epochs is reached or all error terms are above 0
         while epoch < max_epochs and not success:
-            success = True
             stabilities = []
 
             print("\n Training epoch: ", epoch)
@@ -36,12 +36,20 @@ class Perceptron:
             # calculate the term to add to the weights (1/N * pattern * label)
             # with the pattern with the lowest stability
             weight_addition_term = np.dot(np.dot((1 / self.n), x[k_min]), y[k_min])
-            # update the weights by adding the term to the current weights
+
+            # store the old weights
             old_weights = self.weights
+            # update the weights by adding the term to the current weights
             self.weights = np.add(self.weights, weight_addition_term)
 
+            # calculate the angle in radians between the old and the new weights
+            angle = math.acos(np.dot(old_weights, self.weights) / (np.linalg.norm(old_weights) * np.linalg.norm(self.weights)))
+
+            # if the angle between the old and new weights is sufficiently small, stop training
+            if angle < stop_criterion:
+                success = True
+
             epoch += 1
-            success = False
             #print("Weights: ", self.weights)
 
         if epoch == max_epochs:
@@ -50,7 +58,6 @@ class Perceptron:
         elif success:
             print("Success in ", epoch, " epochs!")
 
-        # TODO generalization_error =
         generalization_error = np.dot(1/np.pi,
                                       np.arccos(np.dot(np.dot(self.weights,self.w_star),
                                                        (1/np.linalg.norm(self.weights)) *
